@@ -1,14 +1,5 @@
-
 #ifndef GLOBALARM_H
 #define GLOBALARM_H
-
-// ArmStatus values for ID Packet
-#define CART3D    0
-#define CART3D90  1
-#define CYL3D     2
-#define CYL3D90   3
-#define BCK       4
-
 
 //=============================================================================
 //=============================================================================
@@ -23,7 +14,7 @@
 //=============================================================================
 
 //=============================================================================
-// Reactor Global Constraints & Work Area Definition
+// Pincher Global Constraints & Work Area Definition
 //=============================================================================
 #ifdef PINCHER
 
@@ -63,21 +54,27 @@ enum {
 #define IK_MIN_GA_90  -90
 
 // Define Ranges for the different servos...
+#define BASE_N      512
 #define BASE_MIN    0
 #define BASE_MAX    1023
 
+#define SHOULDER_N    512
 #define SHOULDER_MIN  205 
 #define SHOULDER_MAX  815
 
+#define ELBOW_N      512
 #define ELBOW_MIN    205
 #define ELBOW_MAX    1023
 
+#define WRIST_N      512
 #define WRIST_MIN    205
 #define WRIST_MAX    815
 
+#define WROT_N       512
 #define WROT_MIN     0
 #define WROT_MAX     1023
 
+#define GRIP_N       256
 #define GRIP_MIN     0
 #define GRIP_MAX     512
 
@@ -86,7 +83,6 @@ enum {
 #define ShoulderLength      105L   // (L1)
 #define ElbowLength         105L   //(L2)Length of the Arm from Elbow Joint to Wrist Joint
 #define WristLength         100L   // (L3)Wrist length including Wrist rotate
-#define G_OFFSET            0      // Offset for static side of gripper?
 
 #endif
 
@@ -98,6 +94,7 @@ enum {
 
 #define ARMID       2
 #define CNT_SERVOS  8 //(sizeof(pgm_axdIDs)/sizeof(pgm_axdIDs[0]))
+#define OPT_WRISTROT
 
 /* Servo IDs */
 enum {
@@ -132,21 +129,28 @@ enum {
 #define IK_MIN_GA_90  -90
 
 // Define Ranges for the different servos...
+
+#define BASE_N      512
 #define BASE_MIN    0
 #define BASE_MAX    1023
 
+#define SHOULDER_N    512 
 #define SHOULDER_MIN  205 
 #define SHOULDER_MAX  810
 
+#define ELBOW_N      512
 #define ELBOW_MIN    210
 #define ELBOW_MAX    900
 
+#define WRIST_N      512
 #define WRIST_MIN    200
 #define WRIST_MAX    830
 
+#define WROT_N       512
 #define WROT_MIN     0
 #define WROT_MAX     1023
 
+#define GRIP_N       256
 #define GRIP_MIN     0
 #define GRIP_MAX     512
 
@@ -155,7 +159,6 @@ enum {
 #define ShoulderLength      150L   // (L1)
 #define ElbowLength         147L   //(L2)Length of the Arm from Elbow Joint to Wrist Joint
 #define WristLength         137L   // (L3)Wrist length including Wrist rotate
-#define G_OFFSET            0      // Offset for static side of gripper?
 
 #endif
 
@@ -168,7 +171,7 @@ enum {
 
 #define ARMID       3
 #define CNT_SERVOS  6 //(sizeof(p)/sizeof(pgm_axdIDs[0]))
-
+#define OPT_WRISTROT
 /* Servo IDs */
 enum {
   SID_BASE=1, SID_SHOULDER, SID_ELBOW, SID_WRIST, SID_WRISTROT, SID_GRIP};
@@ -202,21 +205,27 @@ enum {
 #define IK_MIN_GA_90  -90
 
 // Define Ranges for the different servos...
+#define BASE_N      2048
 #define BASE_MIN    0
 #define BASE_MAX    4095
 
+#define SHOULDER_N    2048
 #define SHOULDER_MIN  1024 
 #define SHOULDER_MAX  3072
 
+#define ELBOW_N      3072
 #define ELBOW_MIN    1024
 #define ELBOW_MAX    3072
 
+#define WRIST_N      2048
 #define WRIST_MIN    1024
 #define WRIST_MAX    3072
 
+#define WROT_N       512
 #define WROT_MIN     0
 #define WROT_MAX     1023
 
+#define GRIP_N       256
 #define GRIP_MIN     0
 #define GRIP_MAX     512
 
@@ -225,7 +234,6 @@ enum {
 #define ShoulderLength      150L   // (L1)
 #define ElbowLength         142L   //(L2)Length of the Arm from Elbow Joint to Wrist Joint
 #define WristLength         155L   // (L3)Wrist length including Wrist rotate
-#define G_OFFSET            0      // Offset for static side of gripper?
 
 #endif
 
