@@ -5,7 +5,7 @@
 #include "GlobalArm.h"
 
 extern ArmControl armcontrol;
-extern BioloidController bioloid;
+
 extern void MoveArmToHome(void);
 extern void MoveArmTo90Home(void);
 extern void IDPacket(void);
