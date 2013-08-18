@@ -95,9 +95,6 @@ uint8_t doArmIK(boolean fCartesian, int sIKX, int sIKY, int sIKZ, int sIKGA)
   else {
     // We are in cylindrical mode, probably simply set t to the y we passed in...
     t = sIKY;
-#ifdef DEBUG
-    sol0 = 0;
-#endif
   }
   // convert to sIKX/sIKZ plane, remove wrist, prepare to solve other DOF           
   float flGripRad = (float)(sIKGA)*3.14159/180.0;
@@ -110,8 +107,6 @@ uint8_t doArmIK(boolean fCartesian, int sIKX, int sIKY, int sIKZ, int sIKGA)
   long d2 = 2*ShoulderLength*im;
   float q2 = acos((float)d1/float(d2));
   q1 = q1 + q2;
-
-//  int sol1 = radToServo(q1-1.57);  
 
   d1 = sq(ShoulderLength)-sq((long)im)+sq(ElbowLength);
   d2 = 2*ElbowLength*ShoulderLength;
