@@ -138,7 +138,7 @@ enum {
 #define SHOULDER_MIN  205 
 #define SHOULDER_MAX  810
 
-#define ELBOW_N      512
+#define ELBOW_N      819
 #define ELBOW_MIN    210
 #define ELBOW_MAX    900
 
