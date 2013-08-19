@@ -145,10 +145,10 @@ boolean ProcessUserInput3D90(void) {
     
 // Keep IK values within limits
 //
-    sIKX = min(max(armcontrol.Xaxis, IK_MIN_X), IK_MAX_X);  
-    sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y), IK_MAX_Y);    
-    sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z), IK_MAX_Z);
-    sIKGA = min(max(armcontrol.W_ang, IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords..
+    sIKX = min(max(armcontrol.Xaxis, IK_MIN_X_90), IK_MAX_X_90);  
+    sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y_90), IK_MAX_Y_90);    
+    sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z_90), IK_MAX_Z_90);
+    sIKGA = min(max(armcontrol.W_ang, IK_MIN_GA_90), IK_MAX_GA_90);  // Currently in Servo coords..
     sWristRot = min(max(armcontrol.W_rot, WROT_MIN), WROT_MAX);
     sGrip = min(max(armcontrol.Grip, GRIP_MIN), GRIP_MAX);
     sDeltaTime = armcontrol.dtime*16;
@@ -254,16 +254,16 @@ boolean ProcessUserInputCylindrical90() {
   // condition, don't allow the arm to move farther away...
   // Use Y for 2d distance from base
   if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKY > 0) && (armcontrol.Yaxis < 0)) || ((g_sIKY < 0) && (armcontrol.Yaxis > 0)))
-    sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y), IK_MAX_Y);
+    sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y_90), IK_MAX_Y_90);
 
   // Now Z coordinate...
   if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKZ > 0) && (armcontrol.Zaxis < 0)) || ((g_sIKZ < 0) && (armcontrol.Zaxis > 0)))
-    sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z), IK_MAX_Z);
+    sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z_90), IK_MAX_Z_90);
 
   // And gripper angle.  May leave in Min/Max here for other reasons...   
 
   if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKGA > 0) && (armcontrol.W_ang < 0)) || ((g_sIKGA < 0) && (armcontrol.W_ang > 0)))
-    sIKGA = min(max(armcontrol.W_ang, IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords...
+    sIKGA = min(max(armcontrol.W_ang, IK_MIN_GA_90), IK_MAX_GA_90);  // Currently in Servo coords...
 
     sWristRot = min(max(armcontrol.W_rot, WROT_MIN), WROT_MAX);
     sGrip = min(max(armcontrol.Grip, GRIP_MIN), GRIP_MAX);
@@ -299,34 +299,6 @@ boolean ProcessUserInputBackHoe() {
   fChanged = (sBase != g_sBase) || (sShoulder != g_sShoulder) || (sElbow != g_sElbow) || (sWrist != g_sWrist) || (sWristRot != g_sWristRot) || (sGrip != g_sGrip);  
   return fChanged;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

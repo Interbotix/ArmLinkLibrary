@@ -55,8 +55,8 @@
 
 //#define NOPE
 //#define PINCHER
-//#define REACTOR
-#define WIDOWX
+#define REACTOR
+//#define WIDOWX
 
 
 #define SOUND_PIN    7      // Tell system we have added speaker to IO pin 1
