@@ -49,15 +49,19 @@ void ExtArmState(){
         MoveArmToHome(); 
         IDPacket();        
         break;
+      case 0x58: //88
+        MoveArmTo90Home();
+        IDPacket();
+        break;  
       case 0x60:  //96
         PutArmToSleep();
         IDPacket();        
         break;
       case 0x70:  //112
-        //do something
+        IDPacket();
         break;
       case 0x80:  //128
-        //do something
+        //IK value response
         break;        
       case 0x90:  //144
         //do something
@@ -96,7 +100,7 @@ boolean ProcessUserInput3D(void) {
     
 // Keep IK values within limits
 //
-    sIKX = min(max(armcontrol.Xaxis, IK_MIN_X), IK_MAX_X);  
+    sIKX = min(max((armcontrol.Xaxis-BASE_N), IK_MIN_X), IK_MAX_X);  
     sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y), IK_MAX_Y);    
     sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z), IK_MAX_Z);
     sIKGA = min(max(armcontrol.W_ang, IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords..
@@ -145,7 +149,7 @@ boolean ProcessUserInput3D90(void) {
     
 // Keep IK values within limits
 //
-    sIKX = min(max(armcontrol.Xaxis, IK_MIN_X_90), IK_MAX_X_90);  
+    sIKX = min(max((armcontrol.Xaxis-BASE_N), IK_MIN_X_90), IK_MAX_X_90);  
     sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y_90), IK_MAX_Y_90);    
     sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z_90), IK_MAX_Z_90);
     sIKGA = min(max(armcontrol.W_ang, IK_MIN_GA_90), IK_MAX_GA_90);  // Currently in Servo coords..
@@ -191,7 +195,7 @@ boolean ProcessUserInputCylindrical() {
   sIKGA = g_sIKGA;
 
   // The base rotate is real simple, just allow it to rotate in the min/max range...
-  sBase = min(max((armcontrol.Xaxis+512), BASE_MIN), BASE_MAX);
+  sBase = min(max(armcontrol.Xaxis, BASE_MIN), BASE_MAX);
 
   // Limit how far we can go by checking the status of the last move.  If we are in a warning or error
   // condition, don't allow the arm to move farther away...
@@ -248,7 +252,7 @@ boolean ProcessUserInputCylindrical90() {
   sIKGA = g_sIKGA;
 
   // The base rotate is real simple, just allow it to rotate in the min/max range...
-  sBase = min(max((armcontrol.Xaxis+512), BASE_MIN), BASE_MAX);
+  sBase = min(max(armcontrol.Xaxis, BASE_MIN), BASE_MAX);
 
   // Limit how far we can go by checking the status of the last move.  If we are in a warning or error
   // condition, don't allow the arm to move farther away...
@@ -285,7 +289,7 @@ boolean ProcessUserInputBackHoe() {
   // lets update positions with the 4 joystick values
   // First the base
   boolean fChanged = false;
-  sBase = min(max(armcontrol.Xaxis+512, BASE_MIN), BASE_MAX);
+  sBase = min(max(armcontrol.Xaxis, BASE_MIN), BASE_MAX);
   // Now the Boom
   sShoulder = min(max(armcontrol.Yaxis, SHOULDER_MIN), SHOULDER_MAX);
   // Now the Dipper 
