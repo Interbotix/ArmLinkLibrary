@@ -37,7 +37,6 @@ enum {
 #define IK_MAX_Z  250
 #define IK_MIN_Z  20
 
-#define GA_OFFSET  90 //subtract this from GA to give us -90 - +90 angle
 #define IK_MAX_GA  90
 #define IK_MIN_GA  -90
 
@@ -54,6 +53,10 @@ enum {
 
 #define IK_MAX_GA_90  -45
 #define IK_MIN_GA_90  -90
+
+// offsets 
+#define GA_OFFSET  90 //subtract this from GA to give us -90 - +90 angle
+#define X_OFFSET  512 //offset value for 3D Cart mode on X axis
 
 // Define Ranges for the different servos...
 #define BASE_N      512
@@ -104,6 +107,7 @@ enum {
 
 // Normal Work Area
 
+
 #define IK_MAX_X  300
 #define IK_MIN_X  -300
 
@@ -113,7 +117,6 @@ enum {
 #define IK_MAX_Z  350
 #define IK_MIN_Z  20
 
-#define GA_OFFSET  90 //subtract this from GA to give us -90 - +90 angle
 #define IK_MAX_GA  90
 #define IK_MIN_GA   -90
 
@@ -130,6 +133,10 @@ enum {
 
 #define IK_MAX_GA_90  -45
 #define IK_MIN_GA_90  -90
+
+// offsets 
+#define GA_OFFSET  90 //subtract this from GA to give us -90 - +90 angle
+#define X_OFFSET  512 //offset value for 3D Cart mode on X axis
 
 // Define Ranges for the different servos...
 
@@ -207,6 +214,10 @@ enum {
 
 #define IK_MAX_GA_90  -45
 #define IK_MIN_GA_90  -90
+
+// offsets 
+#define GA_OFFSET  90 //subtract this from GA to give us -90 - +90 angle
+#define X_OFFSET  512 //offset value for 3D Cart mode on X axis
 
 // Define Ranges for the different servos...
 #define BASE_N      2048

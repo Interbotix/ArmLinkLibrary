@@ -100,7 +100,7 @@ boolean ProcessUserInput3D(void) {
     
 // Keep IK values within limits
 //
-    sIKX = min(max((armcontrol.Xaxis-BASE_N), IK_MIN_X), IK_MAX_X);  
+    sIKX = min(max((armcontrol.Xaxis-X_OFFSET), IK_MIN_X), IK_MAX_X);  
     sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y), IK_MAX_Y);    
     sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z), IK_MAX_Z);
     sIKGA = min(max((armcontrol.W_ang-GA_OFFSET), IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords..
@@ -149,7 +149,7 @@ boolean ProcessUserInput3D90(void) {
     
 // Keep IK values within limits
 //
-    sIKX = min(max((armcontrol.Xaxis-BASE_N), IK_MIN_X_90), IK_MAX_X_90);  
+    sIKX = min(max((armcontrol.Xaxis-X_OFFSET), IK_MIN_X_90), IK_MAX_X_90);  
     sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y_90), IK_MAX_Y_90);    
     sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z_90), IK_MAX_Z_90);
     sIKGA = min(max((armcontrol.W_ang-GA_OFFSET), IK_MIN_GA_90), IK_MAX_GA_90);  // Currently in Servo coords..
