@@ -93,7 +93,8 @@ void setup() {
   pinMode(0,OUTPUT);  
   // Lets initialize the Serial Port
   Serial.begin(38400);
-  delay(500);
+  delay(50);
+  IDPacket();
   Serial.println("Interbotix Robot Arm Online.");
 
   // Next initialize the Bioloid
@@ -105,7 +106,7 @@ void setup() {
   // Start off to put arm to sleep...
   PutArmToSleep();
   //Send ID Packet
-  IDPacket();
+
   MSound(3, 60, 2000, 80, 2250, 100, 2500);
 
   //set Gripper Compliance so it doesn't tear itself apart

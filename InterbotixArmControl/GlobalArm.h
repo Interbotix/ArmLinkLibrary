@@ -37,6 +37,7 @@ enum {
 #define IK_MAX_Z  250
 #define IK_MIN_Z  20
 
+#define GA_OFFSET  90 //subtract this from GA to give us -90 - +90 angle
 #define IK_MAX_GA  90
 #define IK_MIN_GA  -90
 
@@ -45,7 +46,7 @@ enum {
 #define IK_MAX_X_90  200
 #define IK_MIN_X_90  -200
 
-#define IK_MAX_Y_90  140
+#define IK_MAX_Y_90  150
 #define IK_MIN_Y_90  20
 
 #define IK_MAX_Z_90  150
@@ -112,6 +113,7 @@ enum {
 #define IK_MAX_Z  350
 #define IK_MIN_Z  20
 
+#define GA_OFFSET  90 //subtract this from GA to give us -90 - +90 angle
 #define IK_MAX_GA  90
 #define IK_MIN_GA   -90
 
@@ -188,6 +190,7 @@ enum {
 #define IK_MAX_Z  350
 #define IK_MIN_Z  20
 
+#define GA_OFFSET  90 //subtract this from GA to give us -90 - +90 angle
 #define IK_MAX_GA  90
 #define IK_MIN_GA   -90
 

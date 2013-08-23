@@ -103,8 +103,8 @@ boolean ProcessUserInput3D(void) {
     sIKX = min(max((armcontrol.Xaxis-BASE_N), IK_MIN_X), IK_MAX_X);  
     sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y), IK_MAX_Y);    
     sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z), IK_MAX_Z);
-    sIKGA = min(max(armcontrol.W_ang, IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords..
-    sWristRot = min(max((armcontrol.W_rot-WROT_N), WROT_MIN), WROT_MAX);
+    sIKGA = min(max((armcontrol.W_ang-GA_OFFSET), IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords..
+    sWristRot = min(max(armcontrol.W_rot, WROT_MIN), WROT_MAX);
     sGrip = min(max(armcontrol.Grip, GRIP_MIN), GRIP_MAX);
     sDeltaTime = armcontrol.dtime*16;
     
@@ -152,8 +152,8 @@ boolean ProcessUserInput3D90(void) {
     sIKX = min(max((armcontrol.Xaxis-BASE_N), IK_MIN_X_90), IK_MAX_X_90);  
     sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y_90), IK_MAX_Y_90);    
     sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z_90), IK_MAX_Z_90);
-    sIKGA = min(max(armcontrol.W_ang, IK_MIN_GA_90), IK_MAX_GA_90);  // Currently in Servo coords..
-    sWristRot = min(max((armcontrol.W_rot-WROT_N), WROT_MIN), WROT_MAX);
+    sIKGA = min(max((armcontrol.W_ang-GA_OFFSET), IK_MIN_GA_90), IK_MAX_GA_90);  // Currently in Servo coords..
+    sWristRot = min(max(armcontrol.W_rot, WROT_MIN), WROT_MAX);
     sGrip = min(max(armcontrol.Grip, GRIP_MIN), GRIP_MAX);
     sDeltaTime = armcontrol.dtime*16;
     
@@ -210,9 +210,9 @@ boolean ProcessUserInputCylindrical() {
   // And gripper angle.  May leave in Min/Max here for other reasons...   
 
   if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKGA > 0) && (armcontrol.W_ang < 0)) || ((g_sIKGA < 0) && (armcontrol.W_ang > 0)))
-    sIKGA = min(max(armcontrol.W_ang, IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords...
+    sIKGA = min(max((armcontrol.W_ang-GA_OFFSET), IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords...
 
-    sWristRot = min(max((armcontrol.W_rot-WROT_N), WROT_MIN), WROT_MAX);
+    sWristRot = min(max(armcontrol.W_rot, WROT_MIN), WROT_MAX);
     sGrip = min(max(armcontrol.Grip, GRIP_MIN), GRIP_MAX);
     sDeltaTime = armcontrol.dtime*16;
    
@@ -267,9 +267,9 @@ boolean ProcessUserInputCylindrical90() {
   // And gripper angle.  May leave in Min/Max here for other reasons...   
 
   if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKGA > 0) && (armcontrol.W_ang < 0)) || ((g_sIKGA < 0) && (armcontrol.W_ang > 0)))
-    sIKGA = min(max(armcontrol.W_ang, IK_MIN_GA_90), IK_MAX_GA_90);  // Currently in Servo coords...
+    sIKGA = min(max((armcontrol.W_ang-GA_OFFSET), IK_MIN_GA_90), IK_MAX_GA_90);  // Currently in Servo coords...
 
-    sWristRot = min(max((armcontrol.W_rot-WROT_N), WROT_MIN), WROT_MAX);
+    sWristRot = min(max(armcontrol.W_rot, WROT_MIN), WROT_MAX);
     sGrip = min(max(armcontrol.Grip, GRIP_MIN), GRIP_MAX);
     sDeltaTime = armcontrol.dtime*16;
    
