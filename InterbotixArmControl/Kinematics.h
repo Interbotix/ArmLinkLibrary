@@ -112,20 +112,33 @@ uint8_t doArmIK(boolean fCartesian, int sIKX, int sIKY, int sIKZ, int sIKGA)
   d2 = 2*ElbowLength*ShoulderLength;
   q2 = acos((float)d1/(float)d2);
 
-#ifdef WIDOWX  
+#ifdef WIDOWX  //Use different radians equation for MX servos
   int sol1 = radToMXServo(q1-1.57);
   int sol2 = radToMXServo(3.14-q2);
   // solve for wrist rotate
   int sol3 = radToMXServo(3.2 + flGripRad - q1 - q2 );
-#else
+  
+#else  //Use different radians equation for AX servos
   int sol1 = radToAXServo(q1-1.57);
   int sol2 = radToAXServo(3.14-q2);
   // solve for wrist rotate
   int sol3 = radToAXServo(3.2 + flGripRad - q1 - q2 );
 #endif  
 
-    // Lets calculate the actual servo values.
 
+#ifdef PINCHER 
+  // Lets calculate the actual servo values.
+  if (fCartesian) {
+    sBase = min(max(BASE_N - sol0, BASE_MIN), BASE_MAX);
+  }
+  sShoulder = min(max(SHOULDER_N - sol1, SHOULDER_MIN), SHOULDER_MAX);
+
+  sElbow = min(max(ELBOW_N + sol2, ELBOW_MIN), ELBOW_MAX);
+
+  sWrist = min(max(WRIST_N - sol3, WRIST_MIN), WRIST_MAX);
+
+#else
+  // Lets calculate the actual servo values.
   if (fCartesian) {
     sBase = min(max(BASE_N - sol0, BASE_MIN), BASE_MAX);
   }
@@ -134,6 +147,7 @@ uint8_t doArmIK(boolean fCartesian, int sIKX, int sIKY, int sIKZ, int sIKGA)
   sElbow = min(max(ELBOW_N - sol2, ELBOW_MIN), ELBOW_MAX);
 
   sWrist = min(max(WRIST_N + sol3, WRIST_MIN), WRIST_MAX);
+#endif
 
   // Remember our current IK positions
   g_sIKX = sIKX; 
@@ -227,10 +241,12 @@ void MoveArmTo(int sBase, int sShoulder, int sElbow, int sWrist, int sWristRot, 
     sMaxDelta = sDelta;
   bioloid.setNextPose(SID_WRIST, sWrist);
 
+
 #ifdef OPT_WRISTROT
   bioloid.setNextPose(SID_WRISTROT, sWristRot); 
 #endif  
   bioloid.setNextPose(SID_GRIP, sGrip);
+
 
   // Save away the current positions...
   g_sBase = sBase;
