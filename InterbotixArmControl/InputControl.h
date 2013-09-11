@@ -10,64 +10,67 @@ extern void MoveArmToHome(void);
 extern void MoveArmTo90Home(void);
 extern void IDPacket(void);
 extern void PutArmToSleep(void);
+extern void ReportAnalog(unsigned char, unsigned int);
 
 //===================================================================================================
 // Check EXT packet to determine action
 //===================================================================================================
-void ExtArmState(){
+   void ExtArmState(){
        if(armcontrol.ext < 0x10){
         // no action
         g_fArmActive = true;
      }
-    switch (armcontrol.ext){
-      case 0x20:  //32
+      else if(armcontrol.ext == 0x20){  //32
         g_bIKMode = IKM_IK3D_CARTESIAN;
         MoveArmToHome(); 
         IDPacket();
-        break;
-      case 0x28:  //40
+      }
+      else if(armcontrol.ext == 0x28){  //40
         g_bIKMode = IKM_IK3D_CARTESIAN_90;
         MoveArmTo90Home(); 
         IDPacket();
-        break;        
-      case 0x30:  //48
+      }        
+      else if(armcontrol.ext == 0x30){  //48
         g_bIKMode = IKM_CYLINDRICAL;
         MoveArmToHome(); 
         IDPacket();        
-        break;    
-      case 0x38:  //56
+      }
+      else if(armcontrol.ext == 0x38){  //56
         g_bIKMode = IKM_CYLINDRICAL_90;
         MoveArmTo90Home(); 
         IDPacket();        
-        break;         
-      case 0x40:  //64
+      }        
+      else if(armcontrol.ext == 0x40){  //64
         g_bIKMode = IKM_BACKHOE;
         MoveArmToHome(); 
         IDPacket();        
-        break;
-      case 0x50:  //80
+      }
+      else if(armcontrol.ext == 0x48){  //72
+      // do something
+      }
+      else if(armcontrol.ext == 0x50){  //80
         MoveArmToHome(); 
         IDPacket();        
-        break;
-      case 0x58: //88
+      }
+      else if(armcontrol.ext == 0x58){  //88
         MoveArmTo90Home();
         IDPacket();
-        break;  
-      case 0x60:  //96
+      }
+      else if(armcontrol.ext == 0x60){  //96
         PutArmToSleep();
         IDPacket();        
-        break;
-      case 0x70:  //112
+      }
+      else if(armcontrol.ext == 0x70){  //112
         IDPacket();
-        break;
-      case 0x80:  //128
+      }
+      else if(armcontrol.ext == 0x80){  //128
         //IK value response
-        break;        
-      case 0x90:  //144
-        //do something
-        break;
+      }
+      else if(armcontrol.ext >= 0xC8){  //200
+        // read analogs
+        ReportAnalog(armcontrol.ext, analogRead(armcontrol.ext - 0xC8));
+      }
     }
-}
 
 
 
@@ -304,9 +307,45 @@ boolean ProcessUserInputBackHoe() {
   return fChanged;
 }
 
+void ReportAnalog(unsigned char command, unsigned int value){
+  unsigned char AH;
+  unsigned char AL;
+  AH = (value & 0xFF00);
+  AL = (value & 0x00FF);
+  Serial.write(0xff);
+  Serial.write(command);
+  Serial.write(AH);
+  Serial.write(AL);
+  Serial.write((unsigned char)(255 - (command+AH+AL)%256));
+}
+
+
+void IDPacket()  {
+  Serial.write(0xFF);
+  Serial.write((unsigned char) ARMID);
+  Serial.write((unsigned char) g_bIKMode);
+  Serial.write((unsigned char) 0);
+  Serial.write((unsigned char)(255 - (ARMID+g_bIKMode+0)%256));
+}
 
 
 
+void DigitalOutputs(){
+         // First bit = D1, 2nd bit = D2, etc. 
+        int i;
+        for(i=0;i<7;i++){
+        unsigned char button = (armcontrol.buttons>>i)&0x01;
+        if(button > 0){
+          // button pressed, go high on a pin
+          DDRB |= 0x01<<(i+1);
+          PORTB |= 0x01<<(i+1);
+        }
+        else{
+          DDRB &= 0xff - (0x01<<(i+1));
+          PORTB &= 0xff - (0x01<<(i+1));
+        } 
+      } 
+}
 
 
 

@@ -331,15 +331,6 @@ void PutArmToSleep(void) {
 }
 
 
-void IDPacket()  {
-  Serial.write(0xFF);
-  Serial.write((unsigned char) ARMID);
-  Serial.write((unsigned char) g_bIKMode);
-  Serial.write((unsigned char) 0);
-  Serial.write((unsigned char)(255 - (ARMID+g_bIKMode+0)%256));
-}
-
-
 
 
 

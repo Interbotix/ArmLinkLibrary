@@ -128,6 +128,7 @@ void loop() {
     
     // Check EXT packet to determine action. Found in InputControl.h
     ExtArmState();  
+    DigitalOutputs();
 
     // See if the Arm is active yet...
     if (g_fArmActive) {
