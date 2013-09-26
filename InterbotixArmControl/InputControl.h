@@ -310,7 +310,7 @@ boolean ProcessUserInputBackHoe() {
 void ReportAnalog(unsigned char command, unsigned int value){
   unsigned char AH;
   unsigned char AL;
-  AH = (value & 0xFF00);
+  AH = ((value & 0xFF00) >> 8);
   AL = (value & 0x00FF);
   Serial.write(0xff);
   Serial.write(command);
