@@ -53,9 +53,9 @@
 // Define Options
 //=============================================================================
 
-//#define NOPE
+#define NOPE
 //#define PINCHER
-#define REACTOR
+//#define REACTOR
 //#define WIDOWX
 
 
