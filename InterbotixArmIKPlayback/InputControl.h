@@ -19,7 +19,7 @@ extern void ReportAnalog(unsigned char, unsigned int);
 //=============================================================================
 
 // use #define to set the I/O numbers, since these will never change - this saves us memory while the Arduino is running
-#define BUTTON1 1
+#define BUTTON1 2
 #define BUTTON2 2
 
 
