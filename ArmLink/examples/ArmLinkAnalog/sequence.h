@@ -1,4 +1,4 @@
-extern void IKSequencingControl(float X, float Y, float Z, float GA, float WR, int grip, int interpolate, int pause);
+extern void IKSequencing(float X, float Y, float Z, float GA, float WR, int grip, int interpolate, int pause);
 
 void SequenceLoop(){
   delay(500);
@@ -8,16 +8,16 @@ void SequenceLoop(){
   do
   {
 
-    
-      IKSequencingControl(-200, 235, 210, 0, 512, 512, 1000, 0);
-    
-    for(int i = -200; i < 200 ; i++)
-    {
-      
-      IKSequencingControl(i, 235, 210, 0, 512, 512, 2, 0);
-    }
-    
-    
+//    
+//      IKSequencingControl(-200, 235, 210, 0, 512, 512, 1000, 0);
+//    
+//    for(int i = -200; i < 200 ; i++)
+//    {
+//      
+//      IKSequencingControl(i, 235, 210, 0, 512, 512, 2, 0);
+//    }
+//    
+//    
 //    
 //    //###########################################################//
 //    // SEQUENCE 2

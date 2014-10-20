@@ -5,7 +5,7 @@
 // Robotics: http://www.trossenrobotics.com/robotic-arms.aspx
 // http://learn.trossenrobotics.com/interbotix/robot-arms
 //=============================================================================
-//Armcontrol packet structure is as follows
+//armlink packet structure is as follows
 //
 // 255, XH, XL, YH, YL, ZH, ZL, WAH, WAL, WRH, WAL, GH, GL, DTIME, BUTTONS, EXT, CHECKSUM
 //
@@ -14,7 +14,7 @@
 // Protocol value ranges
 //
 // XH = high byte X-axis
-// XL = low byte, 0-1023 (-512 through +512 via ArmControl)
+// XL = low byte, 0-1023 (-512 through +512 via armlink)
 //
 // YH = high byte Y-axis
 // YL = low byte, 0-1023
@@ -23,7 +23,7 @@
 // ZL = low byte, 0-1023 
 //
 // WAH = high byte (unused for now, placeholder for higher res wrist angle)
-// WAL = low byte, 0-180 (-90 through +90 via ArmControl)
+// WAL = low byte, 0-180 (-90 through +90 via armlink)
 //
 // WRH = high byte 
 // WRL = low byte, 0-1023. 512 center
@@ -68,14 +68,14 @@
 //=============================================================================
 #include <ax12.h>
 #include <BioloidController.h>
-#include <ArmControl.h>
+#include <ArmLink.h>
 #include "InputControl.h"
 
 //=============================================================================
 // Global Objects
 //=============================================================================
 BioloidController bioloid = BioloidController(1000000);
-ArmControl armcontrol = ArmControl();
+ArmLink armlink = ArmLink();
 
 
 
@@ -122,7 +122,7 @@ void setup() {
 void loop() {
   boolean fChanged = false;
    
-  if (armcontrol.ReadMsgs()) {
+  if (armlink.ReadMsgs()) {
   
     digitalWrite(0,HIGH-digitalRead(0));    
     
@@ -167,7 +167,7 @@ void loop() {
         bioloid.interpolateStep();
       }
     }
-//    buttonsPrev = armcontrol.buttons;
+//    buttonsPrev = armlink.buttons;
 
   }
   else {

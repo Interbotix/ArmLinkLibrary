@@ -4,7 +4,7 @@
 #include "Kinematics.h"
 #include "GlobalArm.h"
 
-extern ArmControl armcontrol;
+extern ArmLink armlink;
 
 extern void MoveArmToHome(void);
 extern void MoveArmTo90Home(void);
@@ -19,7 +19,7 @@ extern void ReportAnalog(unsigned char, unsigned int);
 //=============================================================================
 
 // use #define to set the I/O numbers, since these will never change - this saves us memory while the Arduino is running
-#define BUTTON1 2
+#define BUTTON1 1
 #define BUTTON2 2
 
 
@@ -70,59 +70,59 @@ int spd = 5;  //speed modififer, increase this to increase the speed of the move
 // Check EXT packet to determine action
 //===================================================================================================
    void ExtArmState(){
-       if(armcontrol.ext < 0x10){
+       if(armlink.ext < 0x10){
         // no action
         g_fArmActive = true;
      }
-      else if(armcontrol.ext == 0x20){  //32
+      else if(armlink.ext == 0x20){  //32
         g_bIKMode = IKM_IK3D_CARTESIAN;
         MoveArmToHome(); 
         IDPacket();
       }
-      else if(armcontrol.ext == 0x28){  //40
+      else if(armlink.ext == 0x28){  //40
         g_bIKMode = IKM_IK3D_CARTESIAN_90;
         MoveArmTo90Home(); 
         IDPacket();
       }        
-      else if(armcontrol.ext == 0x30){  //48
+      else if(armlink.ext == 0x30){  //48
         g_bIKMode = IKM_CYLINDRICAL;
         MoveArmToHome(); 
         IDPacket();        
       }
-      else if(armcontrol.ext == 0x38){  //56
+      else if(armlink.ext == 0x38){  //56
         g_bIKMode = IKM_CYLINDRICAL_90;
         MoveArmTo90Home(); 
         IDPacket();        
       }        
-      else if(armcontrol.ext == 0x40){  //64
+      else if(armlink.ext == 0x40){  //64
         g_bIKMode = IKM_BACKHOE;
         MoveArmToHome(); 
         IDPacket();        
       }
-      else if(armcontrol.ext == 0x48){  //72
+      else if(armlink.ext == 0x48){  //72
       // do something
       }
-      else if(armcontrol.ext == 0x50){  //80
+      else if(armlink.ext == 0x50){  //80
         MoveArmToHome(); 
         IDPacket();        
       }
-      else if(armcontrol.ext == 0x58){  //88
+      else if(armlink.ext == 0x58){  //88
         MoveArmTo90Home();
         IDPacket();
       }
-      else if(armcontrol.ext == 0x60){  //96
+      else if(armlink.ext == 0x60){  //96
         PutArmToSleep();
         IDPacket();        
       }
-      else if(armcontrol.ext == 0x70){  //112
+      else if(armlink.ext == 0x70){  //112
         IDPacket();
       }
-      else if(armcontrol.ext == 0x80){  //128
+      else if(armlink.ext == 0x80){  //128
         //IK value response
       }
-      else if(armcontrol.ext >= 0xC8){  //200
+      else if(armlink.ext >= 0xC8){  //200
         // read analogs
-        ReportAnalog(armcontrol.ext, analogRead(armcontrol.ext - 0xC8));
+        ReportAnalog(armlink.ext, analogRead(armlink.ext - 0xC8));
       }
     }
 
@@ -157,12 +157,12 @@ boolean ProcessUserInput3D(void) {
     
 // Keep IK values within limits
 //
-//    sIKX = min(max((armcontrol.Xaxis-X_OFFSET), IK_MIN_X), IK_MAX_X);  
-//    sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y), IK_MAX_Y);    
-//    sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z), IK_MAX_Z);
-//    sIKGA = min(max((armcontrol.W_ang-GA_OFFSET), IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords..
-    sWristRot = min(max(armcontrol.W_rot, WROT_MIN), WROT_MAX);
-    sDeltaTime = armcontrol.dtime*16;
+//    sIKX = min(max((armlink.Xaxis-X_OFFSET), IK_MIN_X), IK_MAX_X);  
+//    sIKY = min(max(armlink.Yaxis, IK_MIN_Y), IK_MAX_Y);    
+//    sIKZ = min(max(armlink.Zaxis, IK_MIN_Z), IK_MAX_Z);
+//    sIKGA = min(max((armlink.W_ang-GA_OFFSET), IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords..
+    sWristRot = min(max(armlink.W_rot, WROT_MIN), WROT_MAX);
+    sDeltaTime = armlink.dtime*16;
     
   }
 
@@ -684,7 +684,7 @@ void DigitalOutputs(){
          // First bit = D1, 2nd bit = D2, etc. 
         int i;
         for(i=0;i<7;i++){
-        unsigned char button = (armcontrol.buttons>>i)&0x01;
+        unsigned char button = (armlink.buttons>>i)&0x01;
         if(button > 0){
           // button pressed, go high on a pin
           DDRB |= 0x01<<(i+1);

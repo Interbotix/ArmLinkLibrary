@@ -4,7 +4,7 @@
 #include "Kinematics.h"
 #include "GlobalArm.h"
 
-extern ArmControl armcontrol;
+extern ArmLink armlink;
 
 extern void MoveArmToHome(void);
 extern void MoveArmTo90Home(void);
@@ -16,59 +16,59 @@ extern void ReportAnalog(unsigned char, unsigned int);
 // Check EXT packet to determine action
 //===================================================================================================
    void ExtArmState(){
-       if(armcontrol.ext < 0x10){
+       if(armlink.ext < 0x10){
         // no action
         g_fArmActive = true;
      }
-      else if(armcontrol.ext == 0x20){  //32
+      else if(armlink.ext == 0x20){  //32
         g_bIKMode = IKM_IK3D_CARTESIAN;
         MoveArmToHome(); 
         IDPacket();
       }
-      else if(armcontrol.ext == 0x28){  //40
+      else if(armlink.ext == 0x28){  //40
         g_bIKMode = IKM_IK3D_CARTESIAN_90;
         MoveArmTo90Home(); 
         IDPacket();
       }        
-      else if(armcontrol.ext == 0x30){  //48
+      else if(armlink.ext == 0x30){  //48
         g_bIKMode = IKM_CYLINDRICAL;
         MoveArmToHome(); 
         IDPacket();        
       }
-      else if(armcontrol.ext == 0x38){  //56
+      else if(armlink.ext == 0x38){  //56
         g_bIKMode = IKM_CYLINDRICAL_90;
         MoveArmTo90Home(); 
         IDPacket();        
       }        
-      else if(armcontrol.ext == 0x40){  //64
+      else if(armlink.ext == 0x40){  //64
         g_bIKMode = IKM_BACKHOE;
         MoveArmToHome(); 
         IDPacket();        
       }
-      else if(armcontrol.ext == 0x48){  //72
+      else if(armlink.ext == 0x48){  //72
       // do something
       }
-      else if(armcontrol.ext == 0x50){  //80
+      else if(armlink.ext == 0x50){  //80
         MoveArmToHome(); 
         IDPacket();        
       }
-      else if(armcontrol.ext == 0x58){  //88
+      else if(armlink.ext == 0x58){  //88
         MoveArmTo90Home();
         IDPacket();
       }
-      else if(armcontrol.ext == 0x60){  //96
+      else if(armlink.ext == 0x60){  //96
         PutArmToSleep();
         IDPacket();        
       }
-      else if(armcontrol.ext == 0x70){  //112
+      else if(armlink.ext == 0x70){  //112
         IDPacket();
       }
-      else if(armcontrol.ext == 0x80){  //128
+      else if(armlink.ext == 0x80){  //128
         //IK value response
       }
-      else if(armcontrol.ext >= 0xC8){  //200
+      else if(armlink.ext >= 0xC8){  //200
         // read analogs
-        ReportAnalog(armcontrol.ext, analogRead(armcontrol.ext - 0xC8));
+        ReportAnalog(armlink.ext, analogRead(armlink.ext - 0xC8));
       }
     }
 
@@ -103,13 +103,13 @@ boolean ProcessUserInput3D(void) {
     
 // Keep IK values within limits
 //
-    sIKX = min(max((armcontrol.Xaxis-X_OFFSET), IK_MIN_X), IK_MAX_X);  
-    sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y), IK_MAX_Y);    
-    sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z), IK_MAX_Z);
-    sIKGA = min(max((armcontrol.W_ang-GA_OFFSET), IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords..
-    sWristRot = min(max(armcontrol.W_rot, WROT_MIN), WROT_MAX);
-    sGrip = min(max(armcontrol.Grip, GRIP_MIN), GRIP_MAX);
-    sDeltaTime = armcontrol.dtime*16;
+    sIKX = min(max((armlink.Xaxis-X_OFFSET), IK_MIN_X), IK_MAX_X);  
+    sIKY = min(max(armlink.Yaxis, IK_MIN_Y), IK_MAX_Y);    
+    sIKZ = min(max(armlink.Zaxis, IK_MIN_Z), IK_MAX_Z);
+    sIKGA = min(max((armlink.W_ang-GA_OFFSET), IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords..
+    sWristRot = min(max(armlink.W_rot, WROT_MIN), WROT_MAX);
+    sGrip = min(max(armlink.Grip, GRIP_MIN), GRIP_MAX);
+    sDeltaTime = armlink.dtime*16;
     
   }
 
@@ -152,13 +152,13 @@ boolean ProcessUserInput3D90(void) {
     
 // Keep IK values within limits
 //
-    sIKX = min(max((armcontrol.Xaxis-X_OFFSET), IK_MIN_X_90), IK_MAX_X_90);  
-    sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y_90), IK_MAX_Y_90);    
-    sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z_90), IK_MAX_Z_90);
-    sIKGA = min(max((armcontrol.W_ang-GA_OFFSET), IK_MIN_GA_90), IK_MAX_GA_90);  // Currently in Servo coords..
-    sWristRot = min(max(armcontrol.W_rot, WROT_MIN), WROT_MAX);
-    sGrip = min(max(armcontrol.Grip, GRIP_MIN), GRIP_MAX);
-    sDeltaTime = armcontrol.dtime*16;
+    sIKX = min(max((armlink.Xaxis-X_OFFSET), IK_MIN_X_90), IK_MAX_X_90);  
+    sIKY = min(max(armlink.Yaxis, IK_MIN_Y_90), IK_MAX_Y_90);    
+    sIKZ = min(max(armlink.Zaxis, IK_MIN_Z_90), IK_MAX_Z_90);
+    sIKGA = min(max((armlink.W_ang-GA_OFFSET), IK_MIN_GA_90), IK_MAX_GA_90);  // Currently in Servo coords..
+    sWristRot = min(max(armlink.W_rot, WROT_MIN), WROT_MAX);
+    sGrip = min(max(armlink.Grip, GRIP_MIN), GRIP_MAX);
+    sDeltaTime = armlink.dtime*16;
     
   }
 
@@ -198,26 +198,26 @@ boolean ProcessUserInputCylindrical() {
   sIKGA = g_sIKGA;
 
   // The base rotate is real simple, just allow it to rotate in the min/max range...
-  sBase = min(max(armcontrol.Xaxis, BASE_MIN), BASE_MAX);
+  sBase = min(max(armlink.Xaxis, BASE_MIN), BASE_MAX);
 
   // Limit how far we can go by checking the status of the last move.  If we are in a warning or error
   // condition, don't allow the arm to move farther away...
   // Use Y for 2d distance from base
-  if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKY > 0) && (armcontrol.Yaxis < 0)) || ((g_sIKY < 0) && (armcontrol.Yaxis > 0)))
-    sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y), IK_MAX_Y);
+  if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKY > 0) && (armlink.Yaxis < 0)) || ((g_sIKY < 0) && (armlink.Yaxis > 0)))
+    sIKY = min(max(armlink.Yaxis, IK_MIN_Y), IK_MAX_Y);
 
   // Now Z coordinate...
-  if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKZ > 0) && (armcontrol.Zaxis < 0)) || ((g_sIKZ < 0) && (armcontrol.Zaxis > 0)))
-    sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z), IK_MAX_Z);
+  if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKZ > 0) && (armlink.Zaxis < 0)) || ((g_sIKZ < 0) && (armlink.Zaxis > 0)))
+    sIKZ = min(max(armlink.Zaxis, IK_MIN_Z), IK_MAX_Z);
 
   // And gripper angle.  May leave in Min/Max here for other reasons...   
 
-  if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKGA > 0) && (armcontrol.W_ang < 0)) || ((g_sIKGA < 0) && (armcontrol.W_ang > 0)))
-    sIKGA = min(max((armcontrol.W_ang-GA_OFFSET), IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords...
+  if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKGA > 0) && (armlink.W_ang < 0)) || ((g_sIKGA < 0) && (armlink.W_ang > 0)))
+    sIKGA = min(max((armlink.W_ang-GA_OFFSET), IK_MIN_GA), IK_MAX_GA);  // Currently in Servo coords...
 
-    sWristRot = min(max(armcontrol.W_rot, WROT_MIN), WROT_MAX);
-    sGrip = min(max(armcontrol.Grip, GRIP_MIN), GRIP_MAX);
-    sDeltaTime = armcontrol.dtime*16;
+    sWristRot = min(max(armlink.W_rot, WROT_MIN), WROT_MAX);
+    sGrip = min(max(armlink.Grip, GRIP_MIN), GRIP_MAX);
+    sDeltaTime = armlink.dtime*16;
    
   fChanged = (sBase != g_sBase) || (sIKY != g_sIKY) || (sIKZ != g_sIKZ) || (sIKGA != g_sIKGA) || (sWristRot != g_sWristRot) || (sGrip != g_sGrip);
 
@@ -255,26 +255,26 @@ boolean ProcessUserInputCylindrical90() {
   sIKGA = g_sIKGA;
 
   // The base rotate is real simple, just allow it to rotate in the min/max range...
-  sBase = min(max(armcontrol.Xaxis, BASE_MIN), BASE_MAX);
+  sBase = min(max(armlink.Xaxis, BASE_MIN), BASE_MAX);
 
   // Limit how far we can go by checking the status of the last move.  If we are in a warning or error
   // condition, don't allow the arm to move farther away...
   // Use Y for 2d distance from base
-  if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKY > 0) && (armcontrol.Yaxis < 0)) || ((g_sIKY < 0) && (armcontrol.Yaxis > 0)))
-    sIKY = min(max(armcontrol.Yaxis, IK_MIN_Y_90), IK_MAX_Y_90);
+  if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKY > 0) && (armlink.Yaxis < 0)) || ((g_sIKY < 0) && (armlink.Yaxis > 0)))
+    sIKY = min(max(armlink.Yaxis, IK_MIN_Y_90), IK_MAX_Y_90);
 
   // Now Z coordinate...
-  if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKZ > 0) && (armcontrol.Zaxis < 0)) || ((g_sIKZ < 0) && (armcontrol.Zaxis > 0)))
-    sIKZ = min(max(armcontrol.Zaxis, IK_MIN_Z_90), IK_MAX_Z_90);
+  if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKZ > 0) && (armlink.Zaxis < 0)) || ((g_sIKZ < 0) && (armlink.Zaxis > 0)))
+    sIKZ = min(max(armlink.Zaxis, IK_MIN_Z_90), IK_MAX_Z_90);
 
   // And gripper angle.  May leave in Min/Max here for other reasons...   
 
-  if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKGA > 0) && (armcontrol.W_ang < 0)) || ((g_sIKGA < 0) && (armcontrol.W_ang > 0)))
-    sIKGA = min(max((armcontrol.W_ang-GA_OFFSET), IK_MIN_GA_90), IK_MAX_GA_90);  // Currently in Servo coords...
+  if ((g_bIKStatus == IKS_SUCCESS) || ((g_sIKGA > 0) && (armlink.W_ang < 0)) || ((g_sIKGA < 0) && (armlink.W_ang > 0)))
+    sIKGA = min(max((armlink.W_ang-GA_OFFSET), IK_MIN_GA_90), IK_MAX_GA_90);  // Currently in Servo coords...
 
-    sWristRot = min(max(armcontrol.W_rot, WROT_MIN), WROT_MAX);
-    sGrip = min(max(armcontrol.Grip, GRIP_MIN), GRIP_MAX);
-    sDeltaTime = armcontrol.dtime*16;
+    sWristRot = min(max(armlink.W_rot, WROT_MIN), WROT_MAX);
+    sGrip = min(max(armlink.Grip, GRIP_MIN), GRIP_MAX);
+    sDeltaTime = armlink.dtime*16;
    
   fChanged = (sBase != g_sBase) || (sIKY != g_sIKY) || (sIKZ != g_sIKZ) || (sIKGA != g_sIKGA) || (sWristRot != g_sWristRot) || (sGrip != g_sGrip);
 
@@ -292,16 +292,16 @@ boolean ProcessUserInputBackHoe() {
   // lets update positions with the 4 joystick values
   // First the base
   boolean fChanged = false;
-  sBase = min(max(armcontrol.Xaxis, BASE_MIN), BASE_MAX);
+  sBase = min(max(armlink.Xaxis, BASE_MIN), BASE_MAX);
   // Now the Boom
-  sShoulder = min(max(armcontrol.Yaxis, SHOULDER_MIN), SHOULDER_MAX);
+  sShoulder = min(max(armlink.Yaxis, SHOULDER_MIN), SHOULDER_MAX);
   // Now the Dipper 
-  sElbow = min(max(armcontrol.Zaxis, ELBOW_MIN), ELBOW_MAX);
+  sElbow = min(max(armlink.Zaxis, ELBOW_MIN), ELBOW_MAX);
   // Bucket Curl
-  sWrist = min(max(armcontrol.W_ang, WRIST_MIN), WRIST_MAX);
-    sWristRot = min(max(armcontrol.W_rot, WROT_MIN), WROT_MAX);
-    sGrip = min(max(armcontrol.Grip, GRIP_MIN), GRIP_MAX);
-    sDeltaTime = armcontrol.dtime*16;
+  sWrist = min(max(armlink.W_ang, WRIST_MIN), WRIST_MAX);
+    sWristRot = min(max(armlink.W_rot, WROT_MIN), WROT_MAX);
+    sGrip = min(max(armlink.Grip, GRIP_MIN), GRIP_MAX);
+    sDeltaTime = armlink.dtime*16;
 
   fChanged = (sBase != g_sBase) || (sShoulder != g_sShoulder) || (sElbow != g_sElbow) || (sWrist != g_sWrist) || (sWristRot != g_sWristRot) || (sGrip != g_sGrip);  
   return fChanged;
@@ -334,7 +334,7 @@ void DigitalOutputs(){
          // First bit = D1, 2nd bit = D2, etc. 
         int i;
         for(i=0;i<7;i++){
-        unsigned char button = (armcontrol.buttons>>i)&0x01;
+        unsigned char button = (armlink.buttons>>i)&0x01;
         if(button > 0){
           // button pressed, go high on a pin
           DDRB |= 0x01<<(i+1);
