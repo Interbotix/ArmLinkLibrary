@@ -162,12 +162,10 @@
 // Define Options
 //=============================================================================
 
-//#define NOPE
+#define NOPE
 //#define PINCHER
 //#define REACTOR
-#define WIDOWX
-
-#define ENABLE_ANALOG FA
+//#define WIDOWX
 
 
 #define SOUND_PIN    7      // Tell system we have added speaker to IO pin 1
@@ -177,19 +175,11 @@
 //=============================================================================
 // Global Include files
 //=============================================================================
-//DYNAMIXEL Control libraries
 #include <ax12.h>
 #include <BioloidController.h>
-//ArmLink library
 #include <ArmControl.h>
-//input control file - local
 #include "InputControl.h"
-
-// Definition of interrupt names
-#include < avr/io.h >
-// ISR interrupt service routine
-#include < avr/interrupt.h >
-
+#include "sequence.h"
 
 //=============================================================================
 // Global Objects
@@ -209,22 +199,11 @@ long lastDebounceTime = 0;  // the last time the output pin was changed
 long debounceDelay = 50;    // the debounce time - the button needs to be held for at least this long in ms
 
 
-// We need to declare the data exchange
-// variable to be volatile - the value is
-// read from memory.
-volatile int playState = 0; // 0 = stopped 1 = playing
-
-volatile long lastInterruptChange;
-
 
 //===================================================================================================
 // Setup 
 //====================================================================================================
 void setup() {
-  
-  attachArbotixInterrupt(FALLING);
-  
-  
   //Serial activity LED output
   pinMode(0,OUTPUT);  
   // Lets initialize the Serial Port
@@ -266,180 +245,200 @@ void setup() {
 //===================================================================================================
 // loop: Our main Loop!
 //===================================================================================================
-void loop() 
-{
+void loop() {
   boolean fChanged = false;
+   
+
+
   
-  //use digitalRead to store the current state of the pushbutton in one of the 'buttonState' variables
+  
+    //use digitalRead to store the current state of the pushbutton in one of the 'buttonState' variables
   buttonState1 = digitalRead(BUTTON1);
-  
+  buttonState2 = digitalRead(BUTTON2);
+
   if (buttonState1 == LOW) 
   {     
-    SequenceLoop();
+    //AnalogControlLoop();     
+    
+    AnalogControlLoop();
+
   } 
-  
+  if (buttonState2 == LOW) 
+  { 
+    
+    SequenceLoop(); 
+  }
+
   int inByte = Serial.read();
 
-  switch (inByte) 
-  {
-    case '1':    
-    SequenceLoop(); 
+  switch (inByte) {
+
+  case '1':    
+   // AnalogControlLoop();
     break;    
+
+  case '2':
+    SequenceLoop(); 
+    break;
+
   }
   
   
-  if (bioloid.interpolating > 0) 
-  {
+    if (bioloid.interpolating > 0) 
+    {
     bioloid.interpolateStep();
-  }
+    }
+  
+  
+  
+  
 } 
 
 
-void SequenceLoop()
+
+
+
+
+void IKSequencingControl(float X, float Y, float Z, float GA, float WR, int grip, int interpolate, int pause)
 {
-  delay(500);
-  Serial.println("Sequencing Mode Active."); 
-  Serial.println("Send '1' or press Button 1 to pause and return to menu.");
-  playState = 1;  //set playState to 1 as the sequence is now playing
-  do
-  {
-    //IKSequencingControl(-200, 235, 210, 0, 512, 512, 2000, 1000);
-    //IKSequencingControl(200, 235, 210, 0, 512, 512, 2000, 5000);
-    //IKSequencingControl(-200, 235, 210, 0, 512, 512, 2000, 1000);
-    
-    
-    g_bIKMode = IKM_CYLINDRICAL;
+  
+  
+  
+       // SetPosition(8,X); //set the position of servo #1 to the current value of 'i'
   
     
-    //###########################################################//
-    // SEQUENCE 1
-    //###########################################################// 
-    IKSequencingControl(2048 , 250 , 225 , 0 , 0 , 256 , 2000 , 1000, playState);
-    //###########################################################// 
-    //###########################################################//
-    // SEQUENCE 1
-    //###########################################################// 
-    IKSequencingControl(1332 , 250 , 225 , 0 , 511 , 24 , 2000 , 1000, playState);
-    //###########################################################// 
-    //###########################################################//
-    // SEQUENCE 1
-    //###########################################################// 
-    IKSequencingControl(2967 , 250 , 225 , 0 , -493 , 512 , 2000 , 1000, playState);
-    //###########################################################// 
-    //###########################################################//
-    // SEQUENCE 1
-    //###########################################################// 
-    IKSequencingControl(304 , 143 , 258 , 0 , -5 , 53 , 2000 , 1000, playState);
-    //###########################################################// 
-    //###########################################################//
-    // SEQUENCE 1
-    //###########################################################// 
-    IKSequencingControl(304 , 143 , 258 , 21 , -5 , 53 , 1000 , 1000, playState);
-    //###########################################################// 
     
-    //###########################################################//
-    // SEQUENCE 1
-    //###########################################################// 
-    IKSequencingControl(1844 , 261 , 167 , 21 , -5 , 53 , 4080 , 1000, playState);
-    //###########################################################// 
+  doArmIK(true, X, Y, Z, GA); 
+  
 
+
+//    sWristRot = WR ;
+  //  sGrip = grip ;
+    
+
+
+//  SetServo(interpolate);
+sWristRot = WR;
+sGrip = grip;
+
+      // If something changed and we are not in an error condition
+    //  if (fChanged && (g_bIKStatus != IKS_ERROR)) {
+        MoveArmTo(sBase, sShoulder, sElbow, sWrist, sWristRot, sGrip, interpolate, true);
+      //}
+  
+  
+  delay(interpolate + pause);
+}
+
+
+
+void AnalogControlLoop()
+{
+  
+  boolean fChanged = false;
+  
+  
+  delay(500);
+  Serial.println("Analog IK Control Mode Active.");
+  Serial.println("Send '1' or press the 'Capture' pushbutton to pause the joysticks and capture the current pose."); 
+  loopbreak = LOW;  
+  
+  //g_bIKMode = IKM_IK3D_CARTESIAN_90;
+  //MoveArmTo90Home(); 
+        
+       // g_bIKMode = IKM_CYLINDRICAL_90;
+        
+    //    g_bIKMode = IKM_BACKHOE;
+      //  MoveArmToHome(); 
+//        
+        g_bIKMode = IKM_IK3D_CARTESIAN;
+        MoveArmToHome(); 
+        
+  while(1)
+  {
+    //Process analog input from ArmControl, translate to working X,Y,Z,GA Coord
+
+  buttonState1 = digitalRead(BUTTON1);
+  buttonState2 = digitalRead(BUTTON2);
+
+
+          
+          
+        switch (g_bIKMode) {
+        case IKM_IK3D_CARTESIAN:
+          fChanged |= ProcessAnalogInput3D();
+          break;
+        case IKM_IK3D_CARTESIAN_90:
+          fChanged |= ProcessAnalogInput3D90();
+          break;          
+        case IKM_CYLINDRICAL:
+          fChanged |= ProcessAnalogInputCylindrical();       
+          break;
+        case IKM_CYLINDRICAL_90:
+          fChanged |= ProcessAnalogInputCylindrical90();       
+          break;
+        case IKM_BACKHOE:
+          fChanged |=ProcessAnalogInputBackHoe();
+          break;
+        }
+    
+    
+    
+    
+ //    fChanged |= ProcessAnalogInput3D();
+    //Calculate goal positions of servos based on X,Y,Z,GA coord determined by ProcessUserInput3D()M
+  //  doArmIK(true, sIKX, sIKY, sIKZ, sIKGA); 
+    //Set servo positions via sDeltaTime interpolation value (set in UserInput as well)
+   // SetServo(0);
+   
+   
+      if (fChanged && (g_bIKStatus != IKS_ERROR)) {
+        MoveArmTo(sBase, sShoulder, sElbow, sWrist, sWristRot, sGrip, 0, true);
+      }
+      
+   
+   
   } 
-  while((Serial.available() == 0) && (playState == 1));  //if a serial command is received or the playState variable changes via intterupt), stop the loop
-    
-  Serial.read(); // Read & discard the character that got us out of the loop.
-  delay(100);
-  Serial.println("Pausing Sequencing Mode."); 
-  delay(500);
- // MenuOptions();
+  
+  
+//  while((Serial.available() == 0) && (loopbreak == LOW)); 
+//  Serial.read(); // Read & discard the character that got us out of the loop.
+//
+//  delay(100);
+//  Serial.println("");
+//  Serial.println("Exiting Analog IK Control Mode."); 
+//  Serial.println("");
+//  Serial.println("Current Arm Coordinate Values:");
+//  Serial.print("    X Axis: ");
+//  Serial.println(g_sIKX, 2);
+//  Serial.print("    Y Axis: ");
+//  Serial.println(g_sIKY, 2);
+//  Serial.print("    Z Axis: ");
+//  Serial.println(g_sIKZ, 2);
+//  Serial.print("    Wrist Angle: ");
+//  Serial.println(g_sIKGA, 2);
+//  Serial.print("    Gripper: ");
+//  Serial.println(Gripper, DEC);
+//
+//  Serial.println("");
+//  Serial.println("Sequence Control Code");
+//  Serial.print("    IKSequencingControl(");
+//  Serial.print(g_sIKX, 2);
+//  Serial.print(", ");
+//  Serial.print(g_sIKY, 2);
+//  Serial.print(", ");
+//  Serial.print(g_sIKZ, 2);
+//  Serial.print(", ");
+//  Serial.print(g_sIKGA, 2);
+//  Serial.print(", ");
+//  Serial.print(Gripper, DEC);
+//  Serial.println(",2000,1000); ");
+//  Serial.println("");
+//
+//  delay(500);
+//  MenuOptions();
 }
 
-
-
-
-void IKSequencingControl(float X, float Y, float Z, float GA, float WR, int grip, int interpolate, int pause, int enable)
-{
-  if(enable == 1)
-  {
-    if(g_bIKMode == IKM_IK3D_CARTESIAN || g_bIKMode == IKM_IK3D_CARTESIAN_90)
-    {
-      doArmIK(true, X, Y, Z, GA); 
-      
-    }
-    else if(g_bIKMode == IKM_CYLINDRICAL || g_bIKMode ==IKM_CYLINDRICAL_90)
-    {  
-    //  sBase = X;
-      doArmIK(false, X, Y, Z, GA); 
-      
-    }
-    else if(g_bIKMode == IKM_BACKHOE)
-    {
-      sBase = X;
-      sShoulder = Y;
-      sElbow = Z;
-      sWrist = GA;
-      
-    }
-    
-    
-    
-    sWristRot = WR;
-    sGrip = grip;
-  
-    MoveArmTo(sBase, sShoulder, sElbow, sWrist, sWristRot, sGrip, interpolate, true);  
-    delay(pause);
-  }
-}
-
-
-
-void attachArbotixInterrupt(int interruptType)
-{
-  
-  // Global Enable INT2 interrupt - pin 2 on the arbotiX
-  EIMSK |= ( 1 << INT2);
-  
-  
-  // Signal change triggers interrupt
-  if(interruptType == LOW)
-  {
-    EICRA |= ( 0 << ISC20);
-    EICRA |= ( 0 << ISC21);
-  }
-  else if(interruptType == CHANGE)
-  {
-    EICRA |= ( 1 << ISC20);
-    EICRA |= ( 0 << ISC21);
-  }
-  else if(interruptType == FALLING)
-  {
-    EICRA |= ( 1 << ISC20);
-    EICRA |= ( 0 << ISC21);
-  }
-  else if(interruptType == RISING)
-  {
-    EICRA |= ( 1 << ISC20);
-    EICRA |= ( 1 << ISC21);
-  }
-    
-}
-
-// Install the interrupt routine.
-ISR(INT2_vect) {
-  
-  if( millis() - lastInterruptChange >100)
-  {
-      
-    // check the value again - since it takes some time to
-    // activate the interrupt routine, we get a clear signal.
-    if(playState == 1)
-    {
-      playState = !playState;
-    }
-    lastInterruptChange = millis();
-    
-  }
-  
-}
 
 
 
