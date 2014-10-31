@@ -20,6 +20,12 @@ extern void ReportAnalog(unsigned char, unsigned int);
         // no action
         g_fArmActive = true;
      }
+      
+      else if(armlink.ext == 0x11){  //96
+        EmergencyStop();
+        IDPacket();        
+      }
+      
       else if(armlink.ext == 0x20){  //32
         g_bIKMode = IKM_IK3D_CARTESIAN;
         MoveArmToHome(); 

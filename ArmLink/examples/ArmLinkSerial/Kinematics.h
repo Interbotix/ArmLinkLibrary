@@ -332,6 +332,21 @@ void PutArmToSleep(void) {
 
 
 
+//===================================================================================================
+// EmergencyStop
+//===================================================================================================
+void EmergencyStop(void) {
+  g_fArmActive = false;
+
+  // And Relax all of the servos...
+  for(uint8_t i=1; i <= CNT_SERVOS; i++) {
+    Relax(i);
+  }
+  g_fServosFree = true;
+}
+
+
+
 
 
 
