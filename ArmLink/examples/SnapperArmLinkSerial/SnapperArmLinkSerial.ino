@@ -63,11 +63,11 @@
 
 */
 
-#include <ArmControl.h>
+#include <ArmLink.h>
 #include <ServoEx.h>
 #include "InputControl.h"
 
-ArmControl armcontrol = ArmControl();
+ArmLink armlink = ArmLink();
 ServoEx    ArmServo[5];
 
 
@@ -93,7 +93,7 @@ void setup(){
  
 void loop(){
   //  if we receive data, do something
-  if (armcontrol.ReadMsgs()) 
+  if (armlink.ReadMsgs()) 
   {
       //Read EXT packet to see if we need to switch IK modes or do anything else
       ExtArmState();

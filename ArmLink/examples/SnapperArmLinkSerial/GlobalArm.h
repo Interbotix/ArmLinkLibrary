@@ -6,6 +6,17 @@
 //=============================================================================
 
 #define ARMID       5
+
+#define ROBOT_GEEK_9G_GRIPPER 1
+#define ROBOT_GEEK_PARALLEL_GRIPPER 2
+
+//#define GRIPPER_TYPE ROBOT_GEEK_9G_GRIPPER
+//#define GRIPPER_TYPE ROBOT_GEEK_PARALLEL_GRIPPER
+
+#ifndef GRIPPER_TYPE
+   #error YOU HAVE TO SELECT THE GRIPPER YOU ARE USING! Uncomment the correct line for your gripper
+#endif
+
 //=============================================================================
 //=============================================================================
 // Normal Work Area
@@ -42,7 +53,7 @@
 // offsets 
 #define GA_OFFSET  90 //subtract this from GA to give us -90 - +90 angle
 #define X_OFFSET  512 //offset value for 3D Cart mode on X axis
-#define GRIPWM_OFFSET 1756
+
 //////////////////////////////////////////////////////////////////////////////
 // SERVO CONFIG  //
 //////////////////////////////////////////////////////////////////////////////
@@ -64,14 +75,23 @@ enum {
 #define ELBOW_MAX     2400
 #define WRIST_MIN     600
 #define WRIST_MAX     2400 
-#define GRIPPER_MIN   900    //full counterclockwise for 9g servo
-#define GRIPPER_MAX   2100   //full clockwise for 9g servo
+//mins and maxes depending on gripper type
+#if GRIPPER_TYPE == ROBOT_GEEK_9G_GRIPPER
+  #define GRIPPER_MIN   900    //full counterclockwise for 9g servo
+  #define GRIPPER_MAX   2100   //full clockwise for 9g servo
+#elif GRIPPER_TYPE == ROBOT_GEEK_PARALLEL_GRIPPER
+  #define GRIPPER_MIN   600    //full counterclockwise for 9g servo
+  #define GRIPPER_MAX   2400   //full clockwise for 9g servo
+#endif
+
+
+
 
 // Define servo offsets in +/- uS. Adjust if your arm is not centering properly.
 #define BAS_SERVO_ERROR 0 //(+ is CW, - is CCW)
-#define SHL_SERVO_ERROR -50 //(+ is forward, - is backward)
+#define SHL_SERVO_ERROR 0 //(+ is forward, - is backward)
 #define ELB_SERVO_ERROR 0 //(+ is up, - is down)
-#define WRI_SERVO_ERROR -150 //(+ is up, - is down)
+#define WRI_SERVO_ERROR 0 //(+ is up, - is down)
 #define GRI_SERVO_ERROR 0 //(+ is tighten grip, - is loosen grip) 
 
  //present positions of the servos 
