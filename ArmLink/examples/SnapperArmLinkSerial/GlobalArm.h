@@ -10,11 +10,14 @@
 #define ROBOT_GEEK_9G_GRIPPER 1
 #define ROBOT_GEEK_PARALLEL_GRIPPER 2
 
+//The 9G gripper is the gripper with the small blue 9g servo
+//The Parralle gripper has a full robotgeek servo and paralle rails
+//Uncomment one of the following lines depending on which gripper you are using.
 //#define GRIPPER_TYPE ROBOT_GEEK_9G_GRIPPER
 //#define GRIPPER_TYPE ROBOT_GEEK_PARALLEL_GRIPPER
 
 #ifndef GRIPPER_TYPE
-   #error YOU HAVE TO SELECT THE GRIPPER YOU ARE USING! Uncomment the correct line for your gripper
+   #error YOU HAVE TO SELECT THE GRIPPER YOU ARE USING! Uncomment the correct line above for your gripper
 #endif
 
 //=============================================================================
