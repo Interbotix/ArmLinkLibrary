@@ -16,10 +16,12 @@ extern void ReportAnalog(unsigned char, unsigned int);
 // Check EXT packet to determine action
 //===================================================================================================
    void ExtArmState(){
+       
      
-     
+      g_fArmActive = false;  //start with g_fArmActive being false, so that only movement commands will activate the arm movement in the main loop
+        
      if(armlink.ext  == 0){
-        // no action
+        // no special action, '0' indicates that a movement command has come through
         g_fArmActive = true;
      }
       
