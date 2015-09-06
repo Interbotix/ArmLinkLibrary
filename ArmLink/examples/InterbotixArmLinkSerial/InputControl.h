@@ -25,9 +25,7 @@ extern void ReportAnalog(unsigned char, unsigned int);
         g_fArmActive = true;
      }
       
-      else if(armlink.ext < 0x10){  
-        
-      }
+      
       else if(armlink.ext == 0x11){  //96
         EmergencyStop();
         IDPacket();        
