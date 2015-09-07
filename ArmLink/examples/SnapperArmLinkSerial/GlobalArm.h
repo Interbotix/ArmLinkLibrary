@@ -7,18 +7,6 @@
 
 #define ARMID       5
 
-#define ROBOT_GEEK_9G_GRIPPER 1
-#define ROBOT_GEEK_PARALLEL_GRIPPER 2
-
-//The 9G gripper is the gripper with the small blue 9g servo
-//The Parralle gripper has a full robotgeek servo and paralle rails
-//Uncomment one of the following lines depending on which gripper you are using.
-//#define GRIPPER_TYPE ROBOT_GEEK_9G_GRIPPER
-//#define GRIPPER_TYPE ROBOT_GEEK_PARALLEL_GRIPPER
-
-#ifndef GRIPPER_TYPE
-   #error YOU HAVE TO SELECT THE GRIPPER YOU ARE USING! Uncomment the correct line above for your gripper
-#endif
 
 //=============================================================================
 //=============================================================================
@@ -79,12 +67,12 @@ enum {
 #define WRIST_MIN     600
 #define WRIST_MAX     2400 
 //mins and maxes depending on gripper type
-#if GRIPPER_TYPE == ROBOT_GEEK_9G_GRIPPER
+#if defined(GRIPPER_TYPE)// == ROBOT_GEEK_9G_GRIPPER
   #define GRIPPER_MIN   900    //full counterclockwise for 9g servo
   #define GRIPPER_MAX   2100   //full clockwise for 9g servo
 #elif GRIPPER_TYPE == ROBOT_GEEK_PARALLEL_GRIPPER
-  #define GRIPPER_MIN   600    //full counterclockwise for 9g servo
-  #define GRIPPER_MAX   2400   //full clockwise for 9g servo
+  #define GRIPPER_MIN   750    //fully closed
+  #define GRIPPER_MAX   2400   //fully open
 #endif
 
 
