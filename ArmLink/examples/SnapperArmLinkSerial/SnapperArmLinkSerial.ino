@@ -108,6 +108,7 @@ void loop(){
   //  if we receive data, do something
   if (armlink.ReadMsgs()) 
   {
+  boolean fChanged = false;
       //Read EXT packet to see if we need to switch IK modes or do anything else
       ExtArmState();
       //process digital outouts
@@ -115,15 +116,57 @@ void loop(){
       
       if(g_fArmActive == true)
       {
+          
+        sBase = g_sBase;
+        sShoulder = g_sShoulder;
+        sElbow = g_sElbow; 
+        sWrist = g_sWrist;
+        sWristRot = g_sWristRot;      
+        sGrip = g_sGrip;
+        
+        
+        
+         // Set InputControl function based on which IKMode we're in
+
+        switch (g_bIKMode) {
+        case IKM_IK3D_CARTESIAN:
+          fChanged |= ProcessUserInput3D();
+          break;
+//        case IKM_IK3D_CARTESIAN_90:
+//          fChanged |= ProcessUserInput3D90();
+//          break;          
+        case IKM_CYLINDRICAL:
+          fChanged |= ProcessUserInputCylindrical();       
+          break;
+//        case IKM_CYLINDRICAL_90:
+//          fChanged |= ProcessUserInputCylindrical90();       
+//          break;
+        case IKM_BACKHOE:
+          fChanged |= ProcessUserInputBackHoe();
+          break;
+        }
+      // If something changed and we are not in an error condition
+      if (fChanged && (g_bIKStatus != IKS_ERROR)) {
+        MoveArmTo(sBase, sShoulder, sElbow, sWrist, sWristRot, sGrip, sDeltaTime, true);
+      }
+   
+   
+    }
+    
+    
+    
+    
+        
+        
       //Process serial input from ArmControl, translate to working X,Y,Z,GA Coord
-      ProcessUserInput3D();
+      //ProcessUserInput3D();
 
       //Calculate goal positions of servos based on X,Y,Z,GA coord determined by ProcessUserInput3D()
-      doArmIK(true, sIKX, sIKY, sIKZ, sIKGA); 
+      //doArmIK(true, sIKX, sIKY, sIKZ, sIKGA); 
 
       //Set servo positions via sDeltaTime interpolation value (set in UserInput as well)
       SetServo(sDeltaTime);
-      }
+      
   }
  }
  
