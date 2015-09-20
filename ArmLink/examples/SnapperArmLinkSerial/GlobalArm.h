@@ -67,7 +67,7 @@ enum {
 #define WRIST_MIN     600
 #define WRIST_MAX     2400 
 //mins and maxes depending on gripper type
-#if defined(GRIPPER_TYPE)// == ROBOT_GEEK_9G_GRIPPER
+#if GRIPPER_TYPE == ROBOT_GEEK_9G_GRIPPER
   #define GRIPPER_MIN   900    //full counterclockwise for 9g servo
   #define GRIPPER_MAX   2100   //full clockwise for 9g servo
 #elif GRIPPER_TYPE == ROBOT_GEEK_PARALLEL_GRIPPER
